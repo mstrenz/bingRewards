@@ -3,9 +3,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
-import java.io.BufferedReader;
+
+import java.io.Console;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Random;
 
@@ -19,17 +19,19 @@ public class getBingRewards {
         Integer randomNum;
 
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        Console cons = System.console();
+        if (cons == null) {
+            System.out.println("Couldn't get Console instance");
+            System.exit(0);
+        }
 
+        cons.printf("Please enter your username:");
+                username = cons.readLine();
 
-            System.out.println("Please enter your username:");
-                username = reader.readLine();
+            cons.printf("Please enter your password:");
+            char[] passwordChars = cons.readPassword();
+            password = new String(passwordChars);
 
-            System.out.println("Please enter your password:");
-            password = reader.readLine();
-
-
-        reader.close();
 
         driver = new FirefoxDriver();
 
