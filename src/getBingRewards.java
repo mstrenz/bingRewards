@@ -13,8 +13,8 @@ public class getBingRewards {
 
     public static void main(String[] args) throws InterruptedException, IOException {
         WebDriver driver;
-        String username = null;
-        String password = null;
+        String username;
+        String password;
         Random rand = new Random();
         Integer randomNum;
 
@@ -37,9 +37,9 @@ public class getBingRewards {
 
         driver.get("http://www.bing.com");
         driver.findElement(By.id("id_s")).click();
-        Thread.sleep(750);
+        Thread.sleep(1000);
         driver.findElement(By.cssSelector(".id_link_text")).click();
-        Thread.sleep(750);
+        Thread.sleep(1000);
         driver.findElement(By.id("i0116")).sendKeys(username);
         driver.findElement(By.id("i0118")).sendKeys(password);
         driver.findElement(By.id("idSIButton9")).click();
