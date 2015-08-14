@@ -4,35 +4,108 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 
-import java.io.Console;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
 public class getBingRewards {
+    private static final String MOBILE = "Mobile";
+    private static final String WEB = "Web";
+    public static WebDriver driver;
+    public static String username;
+    public static String password;
+    public static Random rand = new Random();
+    public static Integer randomNum;
+    public static JButton runPcButton;
+    public static JButton runMobileButton;
+    public static JLabel passwordLabel;
+    public static JLabel usernameLabel;
+    public static JPasswordField passwordInput;
+    public static JTextField usernameInput;
+    public static JFrame frame;
+    public static JPanel panel;
 
-    public static void main(String[] args) throws InterruptedException, IOException {
-        WebDriver driver;
-        String username;
-        String password;
-        Random rand = new Random();
-        Integer randomNum;
-
-
-        Console cons = System.console();
-        if (cons == null) {
-            System.out.println("Couldn't get Console instance");
-            System.exit(0);
+    public static void main(String[] args) throws IOException, InterruptedException {
+        try
+        {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        createFrame();
+    }
 
-        cons.printf("Please enter your username:");
-                username = cons.readLine();
+    private static void createFrame() {
+        frame = new JFrame("Get Bing Rewards");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setOpaque(true);
+        ButtonListener buttonListener = new ButtonListener();
+        JPanel inputpanel = new JPanel();
+        inputpanel.setLayout(new FlowLayout());
 
-            cons.printf("Please enter your password:");
-            char[] passwordChars = cons.readPassword();
+        usernameLabel = new JLabel("Username");
+        usernameInput = new JTextField(20);
+        passwordLabel = new JLabel("Password");
+        passwordInput = new JPasswordField(20);
+        runMobileButton = new JButton("Run Mobile");
+        runMobileButton.setActionCommand(MOBILE);
+        runMobileButton.addActionListener(buttonListener);
+        runPcButton = new JButton("Run PC");
+        runPcButton.setActionCommand(WEB);
+        runPcButton.addActionListener(buttonListener);
+
+        inputpanel.add(usernameLabel);
+        inputpanel.add(usernameInput);
+        inputpanel.add(passwordLabel);
+        inputpanel.add(passwordInput);
+        inputpanel.add(runPcButton);
+        inputpanel.add(runMobileButton);
+
+        panel.add(inputpanel);
+        frame.getContentPane().add(BorderLayout.CENTER, panel);
+        frame.pack();
+        frame.setLocationByPlatform(true);
+        // Center of screen
+        // frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+        frame.setResizable(false);
+    }
+
+    public static class ButtonListener implements ActionListener
+    {
+
+        public void actionPerformed(final ActionEvent ev)
+        {
+            String cmd = ev.getActionCommand();
+            username = usernameInput.getText().trim();
+            char[] passwordChars = passwordInput.getPassword();
             password = new String(passwordChars);
+                if (MOBILE.equals(cmd))
+                {
+                    try {
+                        getMobileRewards();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }else if(WEB.equals(cmd)){
+                    try {
+                        getPcRewards();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+        }
+    }
 
-
+    public static void getPcRewards() throws InterruptedException {
         driver = new FirefoxDriver();
 
         driver.get("http://www.bing.com");
@@ -61,6 +134,9 @@ public class getBingRewards {
 
         driver.quit();
 
+    }
+
+    public static void getMobileRewards() throws InterruptedException{
         FirefoxProfile profile = new FirefoxProfile();
         profile.setPreference("general.useragent.override", "Android / Chrome 34: Mozilla/5.0 (Linux; Android 4.4.2; Nexus 4 Build/KOT49H) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.114 Mobile Safari/537.36");
         driver = new FirefoxDriver(profile);
@@ -88,5 +164,6 @@ public class getBingRewards {
             }
         }
         driver.quit();
+
     }
 }
